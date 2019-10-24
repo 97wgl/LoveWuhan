@@ -45,7 +45,7 @@ public class Result<T> implements Serializable {
         return new Result(code, msg);
     }
 
-    public static  <T> Result<T> success(int code, String msg, T data) {
+    public static <T> Result<T> success(int code, String msg, T data) {
         return new Result(code, msg, data);
     }
 
@@ -59,10 +59,6 @@ public class Result<T> implements Serializable {
 
     public static Result error(int code, String msg) {
         return new Result(code, msg);
-    }
-
-    public static Result error(ResultTypeEnum typeEnum,String msg) {
-        return new Result(typeEnum,msg);
     }
 
     public static <T> Result<T> error(T data) {

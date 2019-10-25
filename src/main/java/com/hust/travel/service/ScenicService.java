@@ -1,7 +1,10 @@
 package com.hust.travel.service;
 
+import com.hust.travel.entity.Picture;
 import com.hust.travel.entity.Scenic;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ScenicService extends IService<Scenic> {
 
+    List<Picture> getSlideShowPictures();
 }

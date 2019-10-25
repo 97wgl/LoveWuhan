@@ -4,15 +4,13 @@ package com.hust.travel.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hust.travel.entity.Picture;
 import com.hust.travel.service.PictureService;
+import com.hust.travel.service.ScenicService;
 import com.hust.travel.vo.Result;
 import com.hust.travel.vo.ResultTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -30,6 +28,9 @@ public class PictureController {
     @Autowired
     PictureService pictureService;
 
+    @Autowired
+    ScenicService scenicService;
+
     @ResponseBody
     @GetMapping("list")
     public Result list(@RequestParam("sid") Integer sid) {
@@ -45,4 +46,10 @@ public class PictureController {
         return Result.success(pictures);
     }
 
+    @ResponseBody
+    @GetMapping("slideShow")
+    public Result slideShow() {
+        List<Picture> pictures = scenicService.getSlideShowPictures();
+        return Result.success(pictures);
+    }
 }

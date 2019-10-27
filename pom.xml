@@ -96,7 +96,7 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.13</version>
         </dependency>
-        
+
         <!-- Pull in as a traditional dependency -->
         <dependency>
             <groupId>com.konghq</groupId>

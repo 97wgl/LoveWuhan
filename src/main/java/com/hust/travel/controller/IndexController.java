@@ -1,6 +1,7 @@
 package com.hust.travel.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hust.travel.vo.Result;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -27,6 +28,34 @@ public class IndexController {
     @GetMapping("spider")
     public Result spider(@RequestParam("sval") String sval,
                          @RequestParam("cid") String cid) {
+
+        String requestBody = "{\n" +
+                "    \"stype\": 0,\n" +
+                "    \"sval\": \"" + sval + "\",\n" +
+                "    \"size\": \"C_130_130\",\n" +
+                "    \"sort\": 0,\n" +
+                "    \"limit\": 20,\n" +
+                "    \"contentType\": \"json\",\n" +
+                "    \"head\": {\n" +
+                "        \"appid\": \"100013776\",\n" +
+                "        \"cid\": \"" + cid + "\",\n" +
+                "        \"ctok\": \"\",\n" +
+                "        \"cver\": \"1.0\",\n" +
+                "        \"lang\": \"01\",\n" +
+                "        \"sid\": \"8888\",\n" +
+                "        \"syscode\": \"09\",\n" +
+                "        \"auth\": \"\",\n" +
+                "        \"extension\": [\n" +
+                "            {\n" +
+                "                \"name\": \"protocal\",\n" +
+                "                \"value\": \"https\"\n" +
+                "            }\n" +
+                "        ]\n" +
+                "    },\n" +
+                "    \"ver\": \"7.10.3.0319180000\",\n" +
+                "    \"pageid\": 10650000804\n" +
+                "}";
+
         HttpResponse<String> response = Unirest.post("https://sec-m.ctrip.com/restapi/soa2/12530/json/activityProdSearch?_fxpcqlniredt=" + cid)
                 .header("Content-Type", "application/json")
                 .header("User-Agent", "PostmanRuntime/7.19.0")
@@ -37,7 +66,7 @@ public class IndexController {
                 .header("Accept-Encoding", "gzip, deflate")
                 .header("Connection", "keep-alive")
                 .header("cache-control", "no-cache")
-                .body("{\n    \"stype\": 0,\n    \"sval\": \"" + sval + "\",\n    \"size\": \"C_130_130\",\n    \"sort\": 0,\n    \"limit\": 20,\n    \"contentType\": \"json\",\n    \"head\": {\n        \"appid\": \"100013776\",\n        \"cid\": \"09031140111250816609\",\n        \"ctok\": \"\",\n        \"cver\": \"1.0\",\n        \"lang\": \"01\",\n        \"sid\": \"8888\",\n        \"syscode\": \"09\",\n        \"auth\": \"\",\n        \"extension\": [\n            {\n                \"name\": \"protocal\",\n                \"value\": \"https\"\n            }\n        ]\n    },\n    \"ver\": \"7.10.3.0319180000\",\n    \"pageid\": 10650000804\n}")
+                .body(requestBody)
                 .asString();
         if (response.isSuccess()) {
             return Result.success(JSON.parse(response.getBody()));

@@ -41,6 +41,8 @@ public class ScenicController {
         if (scenic == null) {
             return Result.error(ResultTypeEnum.NULL_RESULT);
         }
+        scenic.setPopulation(scenic.getPopulation() + 1);
+        scenicService.updateById(scenic);
         return Result.success(scenic);
     }
 

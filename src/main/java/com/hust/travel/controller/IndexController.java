@@ -6,6 +6,7 @@ import com.hust.travel.vo.Result;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author HUST SE1901
  * @since 2019-10-22
  */
+@CrossOrigin
 @Controller
 public class IndexController {
 

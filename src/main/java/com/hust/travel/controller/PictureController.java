@@ -22,6 +22,7 @@ import java.util.List;
  * @author HUST SE1901
  * @since 2019-10-22
  */
+@CrossOrigin
 @Controller
 @RequestMapping("/picture")
 public class PictureController {

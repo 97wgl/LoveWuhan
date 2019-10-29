@@ -23,12 +23,17 @@
 		<script>
 			$(function () {
 
-				$("#classify button").click(function () {
-					$("#classify button").removeClass("active");
-					$(this).addClass("active");
-				});
+				loadWeather();
 
-				//加载天气
+				changeSelector();
+				
+				loadCarousel();
+				
+				loadList(1, 6);
+			});
+			
+			//加载天气
+			function loadWeather() {
 				$.ajax({
 					url: "http://wthrcdn.etouch.cn/weather_mini",
 					type: "get",
@@ -50,16 +55,82 @@
 					},
 					dataType: "json",
 				});
+			}
 
-				//加载轮播图
+			//按XX分类
+			function changeSelector() {
+				$("#classify button").click(function () {
+					$("#classify button").removeClass("active");
+					$(this).addClass("active");
+				});
+			}
+
+			//加载轮播图
+			function loadCarousel() {
 				$.ajax({
 					url: "http://127.0.0.1:8080/picture/slideShow",
 					type: "get",
 					success: function (result) {
-						alert(result)
+						$.each(result.data, function (index, element) {
+							$(".carousel-inner img").eq(index).prop("src", element.path);
+						})
+						// $(result.data).each(function (index, element) {
+						// 	$(".carousel-inner img")[index].prop("src", element.path);
+						// })
+					},
+					dataType: "json"
+				})
+			}
+
+			//加载推荐景点
+			function loadList(page, rows) {
+
+				if(page == 1) $(".row").eq(1).show();
+				if(page == 2) $(".row").eq(1).hide();
+
+				$.ajax({
+					url: "http://127.0.0.1:8080/scenic/list",
+					type: "get",
+					data: {
+						page: page,
+						rows: rows,
+					},
+					success: function (result) {
+						$.each(result.data, function (index, element) {
+							var imgPath = getImgById(element.id);
+							$(".thumbnail").eq(index).attr("id", element.id);
+							$(".thumbnail > img").eq(index).prop("src", imgPath);
+							$(".caption > h3").eq(index).html(element.name);
+							$(".caption > p").eq(index).html(element.introduction);
+						})
 					}
 				})
-			})
+			}
+
+			//根据景点id获取首页推荐图地址
+			function getImgById(id) {
+				var address;
+				$.ajax({
+					url: "http://127.0.0.1:8080/picture/list",
+					type: "get",
+					data: {
+						sid: id,
+					},
+					async: false,
+					success: function (result) {
+						address = result.data[0].path;
+						// return JSON.stringify(result.data[0].path);
+					},
+					dataType: "json"
+				})
+				return address;
+			}
+
+			//根据景点id跳转single.html
+			function jump(obj) {
+				var sid = obj.id;
+				window.location.href = "single.html?sid=" + sid;
+			}
 		</script>
 	</head>
 	<body>
@@ -92,19 +163,19 @@
 				<!-- Wrapper for slides -->
 				<div class="carousel-inner" role="listbox">
 					<div class="item active">
-						<img src="img/昙华林/01.jpg" style="width: 100%; height: 600px;" alt="...">
+						<img style="width: 100%; height: 600px;" alt="...">
 					</div>
 					<div class="item">
-						<img src="img/黄鹤楼/01.jpg" style="width: 100%; height: 600px;" alt="...">
+						<img style="width: 100%; height: 600px;" alt="...">
 					</div>
 					<div class="item">
-						<img src="img/园博园/01.jpg" style="width: 100%; height: 600px;" alt="...">
+						<img style="width: 100%; height: 600px;" alt="...">
 					</div>
 					<div class="item">
-						<img src="img/晴川阁/01.jpg" style="width: 100%; height: 600px;" alt="...">
+						<img style="width: 100%; height: 600px;" alt="...">
 					</div>
 					<div class="item">
-						<img src="img/杜莎夫人蜡像馆/01.jpg" style="width: 100%; height: 600px;" alt="...">
+						<img style="width: 100%; height: 600px;" alt="...">
 					</div>
 				</div>
 
@@ -119,7 +190,6 @@
 				</a>
 			</div>
 		</div>
-
 
 		<div class="center-block" style="width: 70%; margin-top: 10px; margin-bottom: 10px;">
 
@@ -139,62 +209,62 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4">
-					<a href="#" class="thumbnail">
-						<img src="img/园博园/02.jpg" style="height:250px;width:100%;display: block">
+					<a href="javascript:;" onclick="jump(this)" class="thumbnail">
+						<img style="height:250px;width:100%;display: block">
 					</a>
 					<div class="caption">
-						<h3>这里是图文标题1111</h3>
-						<p>这里是描述内容这里是描述内容这里是描述内容这里是描述内容这里是描述内容这里是描述内容这里是描述内容</p>
+						<h3></h3>
+						<p></p>
 						<!--						<a  href="#" class="btn btn-primary">开始学习</a>-->
 						<!--						<a  href="#" class="btn btn-info">正在学习</a>-->
 					</div>
 				</div>
 				<div class="col-md-4">
-					<a href="#" class="thumbnail">
-						<img src="img/园博园/02.jpg" style="height:250px;width:100%;display: block">
+					<a href="javascript:;" onclick="jump(this)" class="thumbnail">
+						<img style="height:250px;width:100%;display: block">
 					</a>
 					<div class="caption">
-						<h3>这里是图文标题2222</h3>
-						<p>这里是描述内容2222这里是描述内容22222这里是描述内容22222这里是描述内容222这里是描述内容2222</p>
+						<h3></h3>
+						<p></p>
 					</div>
 				</div>
 				<div class="col-md-4">
-					<a href="#" class="thumbnail">
-						<img src="img/园博园/02.jpg" style="height:250px;width:100%;display: block">
+					<a href="javascript:;" onclick="jump(this)" class="thumbnail">
+						<img style="height:250px;width:100%;display: block">
 					</a>
 					<div class="caption">
-						<h3>这里是图文标题3333</h3>
-						<p>这里是描述内容3333这里是描述内容3333这里是描述内容33333这里是描述内容222这里是描述内容3333</p>
+						<h3></h3>
+						<p></p>
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-md-4">
-					<a href="#" class="thumbnail">
-						<img src="img/园博园/02.jpg" style="height:250px;width:100%;display: block">
+					<a href="javascript:;" onclick="jump(this)" class="thumbnail">
+						<img style="height:250px;width:100%;display: block">
 					</a>
 					<div class="caption">
-						<h3>这里是图文标题1111</h3>
-						<p>这里是描述内容这里是描述内容这里是描述内容这里是描述内容这里是描述内容这里是描述内容这里是描述内容</p>
+						<h3></h3>
+						<p></p>
 					</div>
 				</div>
 				<div class="col-md-4">
-					<a href="#" class="thumbnail">
-						<img src="img/园博园/02.jpg" style="height:250px;width:100%;display: block">
+					<a href="javascript:;" onclick="jump(this)" class="thumbnail">
+						<img style="height:250px;width:100%;display: block">
 					</a>
 					<div class="caption">
-						<h3>这里是图文标题2222</h3>
-						<p>这里是描述内容2222这里是描述内容22222这里是描述内容22222这里是描述内容222这里是描述内容2222</p>
+						<h3></h3>
+						<p></p>
 					</div>
 				</div>
 				<div class="col-md-4">
-					<a href="#" class="thumbnail">
-						<img src="img/园博园/02.jpg" style="height:250px;width:100%;display: block">
+					<a href="javascript:;" onclick="jump(this)" class="thumbnail">
+						<img style="height:250px;width:100%;display: block">
 					</a>
 					<div class="caption">
-						<h3>这里是图文标题3333</h3>
-						<p>这里是描述内容3333这里是描述内容3333这里是描述内容33333这里是描述内容222这里是描述内容3333</p>
+						<h3></h3>
+						<p></p>
 					</div>
 				</div>
 
@@ -203,14 +273,14 @@
 			<nav aria-label="Page navigation">
 				<ul class="pagination">
 					<li>
-						<a href="#" aria-label="Previous">
+						<a href="javascript:loadList(1, 6)" aria-label="Previous">
 							<span aria-hidden="true">&laquo;</span>
 						</a>
 					</li>
-					<li><a href="#">1</a></li>
-					<li><a href="#">2</a></li>
+					<li><a href="javascript:loadList(1, 6);">1</a></li>
+					<li><a href="javascript:loadList(2, 6);">2</a></li>
 					<li>
-						<a href="#" aria-label="Next">
+						<a href="javascript:loadList(2, 6)" aria-label="Next">
 							<span aria-hidden="true">&raquo;</span>
 						</a>
 					</li>

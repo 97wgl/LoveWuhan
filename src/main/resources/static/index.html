@@ -73,6 +73,7 @@
 					success: function (result) {
 						$.each(result.data, function (index, element) {
 							$(".carousel-inner img").eq(index).prop("src", element.path);
+                            $(".carousel-inner a").eq(index).prop("href", "single.html?sid=" + element.scenicId);
 						})
 						// $(result.data).each(function (index, element) {
 						// 	$(".carousel-inner img")[index].prop("src", element.path);
@@ -163,19 +164,19 @@
 				<!-- Wrapper for slides -->
 				<div class="carousel-inner" role="listbox">
 					<div class="item active">
-						<img style="width: 100%; height: 600px;" alt="...">
+						<a><img style="width: 100%; height: 600px;" alt="..."></a>
 					</div>
 					<div class="item">
-						<img style="width: 100%; height: 600px;" alt="...">
+						<a><img style="width: 100%; height: 600px;" alt="..."></a>
 					</div>
 					<div class="item">
-						<img style="width: 100%; height: 600px;" alt="...">
+						<a><img style="width: 100%; height: 600px;" alt="..."></a>
 					</div>
 					<div class="item">
-						<img style="width: 100%; height: 600px;" alt="...">
+						<a><img style="width: 100%; height: 600px;" alt="..."></a>
 					</div>
 					<div class="item">
-						<img style="width: 100%; height: 600px;" alt="...">
+						<a><img style="width: 100%; height: 600px;" alt="..."></a>
 					</div>
 				</div>
 

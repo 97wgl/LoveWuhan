@@ -8,8 +8,62 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta content="black" name="apple-mobile-web-app-status-bar-style">
 	<link rel="stylesheet" type="text/css" href="css/single.css" />
-	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <style type="text/css">
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+        #panel {
+            position: fixed;
+            background-color: white;
+            max-height: 90%;
+            overflow-y: auto;
+            top: 10px;
+            right: 10px;
+            width: 280px;
+        }
 
+        #panel .amap-call {
+            background-color: #009cf9;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        #panel .amap-lib-driving {
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            overflow: hidden;
+        }
+        .map_pop {
+            position: fixed;
+            width: 894px;
+            margin: 0 auto;
+            padding: 16px;
+            background: #fff;
+        }
+        .map_pop .delete {
+            position: absolute;
+            right: -17px;
+            top: -3px;
+            width: 16px;
+            height: 16px;
+            font: bold 1px Simsun;
+            text-align: center;
+            text-decoration: none;
+            line-height: 16px;
+            background: #0000001a;
+            color: black;
+        }
+    </style>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="css/map.css" />
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=43de45bf95c7b52218e107a667fc8128&plugin=AMap.Driving"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=43de45bf95c7b52218e107a667fc8128&plugin=AMap.Geocoder"></script>
+    <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
 	<script type="text/javascript">
 		$(function () {
 			var url=window.location.search;
@@ -28,6 +82,7 @@
 					"id" : id
 				},
 				dataType: "json",
+                async: false,
 				success: function (result) {
 					$("#titleName").html(result.data.name);
 					$("#spotName").html(result.data.name);
@@ -126,10 +181,98 @@
 			});
 		}
 
+        /**
+         * 获取当前位置坐标
+         */
+        var currPosition = null;
+        var map = new AMap.Map('container', {
+            resizeEnable: true
+        });
+        AMap.plugin('AMap.Geolocation', function() {
+            var geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true, //是否使用高精度定位，默认:true
+                timeout: 10000, //超过10秒后停止定位，默认：5s
+                buttonPosition: 'RB', //定位按钮的停靠位置
+                buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true, //定位成功后是否自动调整地图视野到定位点
+
+            });
+            geolocation.getCurrentPosition(function(status, result) {
+                if (status == 'complete') {
+                    // onComplete(result)
+                    currPosition = result.position;
+                }
+            });
+        });
+
+
+
+
+        /**
+         * 获取景点位置坐标
+         */
+        var destPosition = null;
+        var address = "武汉市武昌区蛇山西山坡特1号";
+        // 根据地址获取经纬度坐标
+        function resolveAddress(address) {
+            var geocoder = new AMap.Geocoder({});
+            geocoder.getLocation(address, function(status, result) {
+                if (status === 'complete' && result.geocodes.length) {
+                    destPosition = result.geocodes[0].location;
+                }
+            });
+        }
+        resolveAddress(address);
+
+
+
+        /**
+         * 路径规划
+         */
+        function pathPlaning(currPosition, destPosition) {
+            //基本地图加载
+            var map = new AMap.Map("container", {
+                resizeEnable: true,
+                center: [currPosition.lng, currPosition.lat], //地图中心点
+                zoom: 13 //地图显示的缩放级别
+            });
+
+
+            AMap.plugin('AMap.Driving', function() {
+                //构造路线导航类
+                var driving = new AMap.Driving({
+                    map: map,
+                    panel: "panel"
+                });
+                driving.search(new AMap.LngLat(currPosition.lng, currPosition.lat), new AMap.LngLat(destPosition.lng,
+                    destPosition.lat), function(status, result) {
+                    // if (status === 'complete') {
+                    // 	log.success('加载数据完成');
+                    // } else {
+                    // 	log.error('获取数据失败：' + result)
+                    // }
+                });
+            });
+            document.getElementById("mapDialog").show();
+        }
+
+        function closeDialog() {
+            document.getElementById("mapDialog").close();
+        }
+
+        function mapView() {
+			pathPlaning(currPosition, destPosition);
+		}
+
 	</script>
 	<title ></title>
 </head>
 <body>
+<dialog id="mapDialog" class="map_pop" style="position: absolute; z-index: 10001; width: 800px; height: 602px; top: 20px;">
+    <a href="javascript:closeDialog();" id="J_delMap" class="delete">×</a>
+    <div id="container"></div>
+    <div id="panel"></div>
+</dialog>
 <div id="root">
 	<div class="imvc-root" data-reactroot="" data-reactid="1" data-react-checksum="1965021102">
 		<div class="imvc-view-manager" data-reactid="2">
@@ -201,7 +344,7 @@
 										<!-- /react-text --></span>
 										<ul data-reactid="42">
 											<li data-reactid="43"><em data-reactid="44" style="font-size: 14px;">景点地址</em><span data-reactid="45" id="address" style="font-size: 17px;"></span><a class="map-icon"
-																																																  href="javascript:void(0);" data-reactid="46"><i data-reactid="47"></i><!-- react-text: 48 -->查看地图
+																																																  href="javascript:mapView();" data-reactid="46"><i data-reactid="47"></i><!-- react-text: 48 -->查看地图
 												<!-- /react-text --></a>
 											</li>
 										</ul><br><br><br>
@@ -351,6 +494,9 @@
 					</div><!-- react-empty: 539 -->
 				</div>
 			</div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
 

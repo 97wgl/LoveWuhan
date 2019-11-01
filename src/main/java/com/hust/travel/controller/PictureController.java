@@ -34,8 +34,8 @@ public class PictureController {
 
     @ResponseBody
     @GetMapping("list")
-    public Result list(@RequestParam("sid") Integer sid) {
-        if (sid == null) {
+    public Result list(@RequestParam(value = "sid") Integer sid) {
+        if (sid == null || sid <= 0) {
             return Result.error(ResultTypeEnum.PARAM_ERROR);
         }
         QueryWrapper<Picture> queryWrapper = new QueryWrapper<>();

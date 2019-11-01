@@ -32,8 +32,8 @@ public class ScenicController {
 
     @ResponseBody
     @GetMapping("info")
-    public Result info(@RequestParam("id") Integer id) {
-        if (id == null) {
+    public Result info(@RequestParam(value = "id", defaultValue = "1") Integer id) {
+        if (id == null || id <= 0) {
             return Result.error(ResultTypeEnum.PARAM_ERROR);
         }
         Scenic scenic = scenicService.getById(id);
@@ -47,7 +47,7 @@ public class ScenicController {
 
     @ResponseBody
     @GetMapping("list")
-    public Result list(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "rows", defaultValue = "9") Integer rows, @RequestParam(value = "sortOrder", defaultValue = "population", required = false) String sortOrder) {
+    public Result list(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "rows", defaultValue = "6") Integer rows, @RequestParam(value = "sortOrder", defaultValue = "population", required = false) String sortOrder) {
         QueryWrapper<Scenic> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc(sortOrder);
         IPage<Scenic> iPage = new Page<>(page, rows);

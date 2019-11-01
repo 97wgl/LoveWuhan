@@ -76,7 +76,7 @@
 		//根据景点id获取景点的文字信息以及其他信息
 		function loadIntroduction(id) {
 			$.ajax({
-				url: "http://127.0.0.1:8080/scenic/info",
+				url: "/scenic/info",
 				type: "get",
 				data: {
 					"id" : id
@@ -121,7 +121,7 @@
 		//根据景点id获取景点的图片
 		function loadImgById(id) {
 			$.ajax({
-				url: "http://127.0.0.1:8080/picture/list",
+				url: "/picture/list",
 				type: "get",
 				data: {
 					sid: id,
@@ -154,7 +154,7 @@
 		//根据景点id获取景点的sval和cid
 		function loadFun(sval,cid) {
 			$.ajax({
-				url: "http://127.0.0.1:8080/spider",
+				url: "/spider",
 				type: "get",
 				data: {
 					sval:sval,

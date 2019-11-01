@@ -69,7 +69,7 @@
 			//加载轮播图
 			function loadCarousel() {
 				$.ajax({
-					url: "http://127.0.0.1:8080/picture/slideShow",
+					url: "/picture/slideShow",
 					type: "get",
 					success: function (result) {
 						$.each(result.data, function (index, element) {
@@ -91,7 +91,7 @@
 				if(page == 2) $(".row").eq(1).hide();
 
 				$.ajax({
-					url: "http://127.0.0.1:8080/scenic/list",
+					url: "/scenic/list",
 					type: "get",
 					data: {
 						page: page,
@@ -114,7 +114,7 @@
 			function getImgById(id) {
 				var address;
 				$.ajax({
-					url: "http://127.0.0.1:8080/picture/list",
+					url: "/picture/list",
 					type: "get",
 					data: {
 						sid: id,
